@@ -5,17 +5,12 @@ import java.awt.EventQueue;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import java.awt.BorderLayout;
-import javax.swing.SpringLayout;
 import javax.swing.JButton;
-import javax.swing.JSplitPane;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.GridLayout;
-import javax.swing.JLabel;
-import javax.swing.JComboBox;
-import javax.swing.JTextField;
-import javax.swing.SwingConstants;
-import javax.swing.JTextPane;
-import java.awt.Font;
+import java.awt.event.ActionListener;
+import java.awt.event.ActionEvent;
 
 public class Main {
 
@@ -48,31 +43,41 @@ public class Main {
 	 * Initialize the contents of the frame.
 	 */
 	private void initialize() {
+		int filas = 5;
+		int columnas = 5;
+		Presentador presentador = new Presentador(filas, columnas);
+
 		frame = new JFrame();
 		frame.setResizable(false);
-		frame.setBounds(320, 180, 1280, 720);
-		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-		
-		JPanel panel_1 = new JPanel();
-		panel_1.setBackground(Color.GREEN);
-		frame.getContentPane().add(panel_1, BorderLayout.WEST);
-		
-		JTextPane txtpnContadorReglasRecords = new JTextPane();
-		txtpnContadorReglasRecords.setEditable(false);
-		txtpnContadorReglasRecords.setFont(new Font("Times New Roman", Font.BOLD, 20));
-		txtpnContadorReglasRecords.setText("CONTADOR\r\nREGLAS\r\nRECORDS");
-		panel_1.add(txtpnContadorReglasRecords);
-		
-		JPanel panel_2 = new JPanel();
-		panel_2.setBackground(Color.RED);
-		frame.getContentPane().add(panel_2, BorderLayout.CENTER);
-		panel_2.setLayout(null);
-		
-		JTextPane txtpnJuego = new JTextPane();
-		txtpnJuego.setEditable(false);
-		txtpnJuego.setBounds(448, 268, 82, 30);
-		txtpnJuego.setText("JUEGO");
-		txtpnJuego.setFont(new Font("Times New Roman", Font.BOLD, 20));
-		panel_2.add(txtpnJuego);
+		frame.setSize(1280, 800);
+		frame.setLocationRelativeTo(null);
+
+		JPanel puntos = new JPanel();
+		puntos.setBackground(Color.GREEN);
+		frame.getContentPane().add(puntos, BorderLayout.CENTER);
+
+		JPanel juego = new JPanel();
+		juego.setBackground(Color.RED);
+		juego.setPreferredSize(new Dimension(800, 800));
+		juego.setLayout(new GridLayout(filas, columnas));
+		frame.getContentPane().add(juego, BorderLayout.EAST);
+
+		JButton[][] botones = new JButton[filas][columnas];
+		for (int i = 0; i < filas; i++) {
+			for (int j = 0; j < columnas; j++) {
+				botones[i][j] = new JButton();
+				botones[i][j].setBackground(Color.gray);
+				final int x = i;
+				final int y = j;
+				botones[i][j].addActionListener(new ActionListener() {
+					public void actionPerformed(ActionEvent e) {
+						presentador.cambiarColor(x, y);
+				        botones[x][y].setBackground(presentador.colorAwt(presentador.getColor(x, y)));
+					}
+				});
+				juego.add(botones[i][j]);
+			}
+		}
+
 	}
 }
